@@ -1,4 +1,7 @@
 # Short-sort
+
+https://github.com/user-attachments/assets/6598c797-0715-443f-9878-f8ce5d0242dc
+
 <b> Deletes Video Files from Local Storage, and lets you scroll through them. </b>
 Depending on how many videos there are first load might take a few seconds.
 
@@ -22,10 +25,3 @@ Put your right hand on the arrow keys, down = next, 0 (num-pad) skip forward in 
 7. Simply CTR+C in the CMD to close it, or just 'X'.
 
 Info: This version does not include .mkv files. Transcoding/ffmpeg was removed too for simplicity.
-
-
-
-https://github.com/user-attachments/assets/6598c797-0715-443f-9878-f8ce5d0242dc
-
-
-
