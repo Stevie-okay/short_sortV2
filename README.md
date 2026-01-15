@@ -49,6 +49,7 @@ pip install waitress
 - **Ctrl+C**: Close application via command line or simply **X** close it.
 
 ### Reset Watched Videos
-Once a Video is watched it's hash will be stored in the local SQLIght database, if you start it again already watched videos will be skipped.
-To rewatch already viewed videos, simply delete the `watched_videos.db` file in the script folder.
-Info: This version does not include .mkv files. Transcoding/ffmpeg was removed too for simplicity.
+-Once a Video is watched it's hash will be stored in the local SQLIght database, if you start short-short.py another time again **already watched videos will be skipped.**
+-To rewatch already viewed videos, simply delete the `watched_videos.db` file in the script folder.
+
+-Info: This version does not include .mkv files. Transcoding/ffmpeg was removed too for simplicity.
