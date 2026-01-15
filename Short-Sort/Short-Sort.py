@@ -98,7 +98,6 @@ def index():
 
 @app.route('/video/<path:filename>')
 def stream_video(filename):
-    # Decode the filename from the URL
     filename = urllib.parse.unquote(filename)
     print(f"Get /video {filename}")
     video_path = os.path.join(VIDEO_FOLDER, filename)
@@ -159,3 +158,4 @@ atexit.register(shutdown_cleanup)
 if __name__ == '__main__':
 
     serve(app, host='127.0.0.1', port=5000)
+
