@@ -1,5 +1,6 @@
 # Short-sort
 <b> Deletes Video Files from Local Storage, and lets you scroll through them. </b>
+Depending on how many videos there are first load might take a few seconds.
 
 1. Before you run it edit Short-Sort.py (text-editor) and add your folder path in line 11 "VIDEO_FOLDER = " (videos in subfolders will be included)
 2. Start Short-Sort.py
