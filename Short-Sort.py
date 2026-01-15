@@ -1,10 +1,7 @@
-from flask import Flask, render_template, jsonify, request, send_file, Response
+from flask import Flask, render_template, jsonify, request, send_file
 import os
 import urllib.parse
 import mimetypes  
-import subprocess
-import time
-import psutil 
 import threading
 import atexit
 import sqlite3
@@ -158,4 +155,5 @@ atexit.register(shutdown_cleanup)
 if __name__ == '__main__':
 
     serve(app, host='127.0.0.1', port=5000)
+
 
