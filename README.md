@@ -6,8 +6,8 @@ https://github.com/user-attachments/assets/6598c797-0715-443f-9878-f8ce5d0242dc
 Depending on how many videos there are first load might take a few seconds.
 
 Needed Packages:  
-pip install flask  
-pip install waitress
+&emsp;pip install flask  
+&emsp;pip install waitress
 
 1. Before you run it edit Short-Sort.py (text-editor) and add your folder path in line 11 "VIDEO_FOLDER = " (videos in subfolders will be included)
 2. Start Short-Sort.py
