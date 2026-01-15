@@ -13,16 +13,14 @@ from waitress import serve
 
 app = Flask(__name__)
 
-VIDEO_FOLDER = r'C:\Users\user\Desktop\tmpdir'
-DB_PATH = './watched_videos.db'
+VIDEO_FOLDER = r'J\\Channels'      # CHANGE IT TO YOUR DOWNLOAD LOCATION!!!
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "watched_videos.db")
 SKIP_LAST_VIEWED = True
 
 files_to_delete = []
 files_in_use = set()
 
 def create_db():
-    """Create the database and table if they don't exist."""
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -159,4 +157,5 @@ def shutdown_cleanup():
 atexit.register(shutdown_cleanup)
 
 if __name__ == '__main__':
+
     serve(app, host='127.0.0.1', port=5000)
