@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Short-Sort</title>
+<style>
+    /* Global styles */
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #e0f7fa; /* Light teal background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        color: #333; /* Dark text for better readability */
+        overflow: hidden;
+    }
+
+    /* Container for the video player */
+    .video-container {
+        position: relative;
+        width: 90%;
+        height: 90%;
+        max-width: 95%;
+        max-height: 95%;
+        background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Playful gradient */
+        border-radius: 15px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    /* Video player styling */
+    video {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+        border: 6px solid #ffab91; /* Soft peachy border to blend with the background */
+        box-shadow: 0px 4px 20px rgba(255, 105, 97, 0.3); /* Warm peachy shadow for separation */
+    }
+
+    /* Info Button */
+    .info-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #f7c59f; /* Light peachy color */
+        color: white;
+        border: none;
+        padding: 12px;
+        cursor: pointer;
+        border-radius: 50%;
+        font-size: 1.4rem;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .info-btn:hover {
+        background-color: #ff7f50; /* Coral color for hover effect */
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Confirmation Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        color: #333;
+        width: 80%;
+        max-width: 500px;
+        animation: bounce-in 0.6s ease-in-out;
+    }
+
+    .modal p {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+
+    .modal-button {
+        background-color: #f7b731; /* Bright yellow for confirm */
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        margin: 10px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .modal-button:hover {
+        background-color: #e67e22; /* Orange for hover effect */
+    }
+
+    .modal-button.cancel {
+        background-color: #e74c3c; /* Red for cancel */
+    }
+
+    .modal-button.cancel:hover {
+        background-color: #c0392b; /* Dark red for hover */
+    }
+
+    /* Smooth transition for modal */
+    .modal-content {
+        animation: fade-in 0.5s ease-in-out;
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes bounce-in {
+        0% {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+        60% {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Info Modal Styles */
+    .info-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); /* Dark background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .info-modal-content {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 16px;
+        text-align: left;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        color: #333;
+        width: 80%;
+        max-width: 600px;
+        overflow-y: auto; /* Added for long content */
+    }
+
+    .modal-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
+        border-bottom: 2px solid #ff7f50;
+        padding-bottom: 10px;
+    }
+
+    .modal-section {
+        margin-bottom: 20px;
+    }
+
+    .instruction-tab {
+        margin-bottom: 10px;
+        border-radius: 8px;
+        background-color: #f7f7f7;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+
+    .instruction-tab:hover {
+        transform: translateY(-5px); /* Slight hover effect for interactivity */
+    }
+
+    .tab-header {
+        background-color: #ff7f50; /* Coral color */
+        color: white; /* Keep the text white for better contrast */
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .tab-content {
+        padding: 12px;
+        background-color: #ffffff;
+        border-radius: 0 0 8px 8px;
+    }
+
+    .key {
+        font-weight: bold;
+        color: #333; /* Dark color for the key text */
+    }
+
+    .action-text {
+        font-style: italic;
+        color: #444;
+        font-weight: normal;
+    }
+
+    .checkbox-label {
+        font-weight: bold;
+        margin-top: 10px;
+        font-size: 1.1rem;
+    }
+
+    .info-modal-button {
+        background-color: #ff7f50; /* Coral color */
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        margin: 10px 0 0;
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+    .info-modal-button:hover {
+        background-color: #ff6f2a; /* Darker coral for hover */
+    }
+
+    /* Add some animation to make the modal appear with a little bounce */
+    .info-modal {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
+</head>
+<body>
+
+    <div class="video-container">
+        <video id="video-player" controls>
+            <source id="video-source" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <p>Are you sure you want to delete this video?</p>
+            <button id="confirm-delete" class="modal-button">Yes, delete</button>
+            <button id="cancel-delete" class="modal-button cancel">Cancel</button>
+        </div>
+    </div>
+
+
+<!-- Info Modal -->
+<div id="info-modal" class="info-modal">
+    <div class="info-modal-content">
+        <h2 class="modal-title">How to Use - The Controls</h2>
+
+        <div class="modal-section">
+            <div class="instruction-tab">
+                <div class="tab-header">
+                    <span class="key">Next video</span>
+                </div>
+                <div class="tab-content">
+                    <span class="action-text">ArrowDown or MouseWheelDown</span>
+                </div>
+            </div>
+
+            <div class="instruction-tab">
+                <div class="tab-header">
+                    <span class="key">Previous video</span>
+                </div>
+                <div class="tab-content">
+                    <span class="action-text">ArrowUp or MouseWheelUp</span>
+                </div>
+            </div>
+
+            <div class="instruction-tab">
+                <div class="tab-header">
+                    <span class="key">Opens Dialog for Deletion</span>
+                </div>
+                <div class="tab-content">
+                    <span class="action-text">ArrowRight Once</span>
+                </div>
+            </div>
+
+            <div class="instruction-tab">
+                <div class="tab-header">
+                    <span class="key">Deletes video (no return)</span>
+                </div>
+                <div class="tab-content">
+                    <span class="action-text">ArrowRight Second time</span>
+                </div>
+            </div>
+
+            <div class="instruction-tab">
+                <div class="tab-header">
+                    <span class="key">Cancel deletion</span>
+                </div>
+                <div class="tab-content">
+                    <span class="action-text">ArrowLeft</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="info-modal-button" id="close-info-modal">Close</button>
+    </div>
+</div>
+
+<!-- Info button to show controls description -->
+<button class="info-btn" id="info-btn">Controls</button>
+
+</body>
+<script>
+// Constants
+const NAVIGATION_COOLDOWN = 300;
+const VIDEO_PLAYER = document.getElementById("video-player");
+const VIDEO_SOURCE = document.getElementById("video-source");
+const CONFIRMATION_MODAL = document.getElementById("confirmation-modal");
+const CONFIRM_DELETE_BTN = document.getElementById("confirm-delete");
+const CANCEL_DELETE_BTN = document.getElementById("cancel-delete");
+const INFO_BTN = document.getElementById("info-btn");
+const INFO_MODAL = document.getElementById("info-modal");
+const CLOSE_INFO_MODAL_BTN = document.getElementById("close-info-modal");
+
+// State management
+let currentVideoIndex = 0;
+let deleteConfirmed = false;
+let isNavigating = false;
+
+// Initialize modals
+CONFIRMATION_MODAL.style.display = "none";
+INFO_MODAL.style.display = "none";
+
+// Video list from server
+const videos = {{ videos | tojson }};
+
+// Helper functions
+function showElement(element) {
+    element.style.display = "flex";
+}
+
+function hideElement(element) {
+    element.style.display = "none";
+}
+
+function playVideo() {
+    try {
+        VIDEO_PLAYER.play();
+    } catch (error) {
+        console.warn("Auto-play failed. User interaction may be required.", error);
+    }
+}
+
+function loadVideo(index) {
+    if (index < 0 || index >= videos.length) return;
+    
+    const videoFile = videos[index];
+    const encodedPath = encodeURIComponent(videoFile);
+    VIDEO_SOURCE.src = `/video/${encodedPath}`;
+    VIDEO_PLAYER.load();
+    playVideo();
+}
+
+function updateVideoList(callback) {
+    fetch("/update_file_list")
+        .then(response => {
+            if (!response.ok) throw new Error("Network response was not ok");
+            return response.json();
+        })
+        .then(data => {
+            videos.length = 0;
+            videos.push(...data);
+            
+            // Ensure index stays within bounds
+            if (currentVideoIndex >= videos.length) {
+                currentVideoIndex = Math.max(0, videos.length - 1);
+            }
+            
+            callback();
+        })
+        .catch(error => {
+            console.error("Error updating video list:", error);
+            callback(); // Fallback to existing list
+        });
+}
+
+function handleNavigation(direction) {
+    if (isNavigating) return;
+    
+    isNavigating = true;
+    const newIndex = direction === 'up' ? currentVideoIndex - 1 : currentVideoIndex + 1;
+    
+    if (newIndex >= 0 && newIndex < videos.length) {
+        currentVideoIndex = newIndex;
+        loadVideo(currentVideoIndex);
+    }
+    
+    setTimeout(() => isNavigating = false, NAVIGATION_COOLDOWN);
+}
+
+// Event handlers
+document.addEventListener('keydown', (event) => {
+    // Prevent default scrolling for arrow keys
+    if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+        event.preventDefault();
+    }
+
+    switch (event.key) {
+        case 'ArrowRight':
+            if (!deleteConfirmed) {
+                deleteConfirmed = true;
+                showElement(CONFIRMATION_MODAL);
+            } else {
+                deleteVideo();
+                deleteConfirmed = false;
+            }
+            event.preventDefault();
+            break;
+
+        case 'Escape':
+        case 'ArrowLeft':
+            if (CONFIRMATION_MODAL.style.display === "flex") {
+                hideElement(CONFIRMATION_MODAL);
+                deleteConfirmed = false;
+            }
+            event.preventDefault();
+            break;
+
+        case 'ArrowUp':
+            handleNavigation('up');
+            break;
+
+        case 'ArrowDown':
+            handleNavigation('down');
+            break;
+
+        case '0':
+            const skipTime = VIDEO_PLAYER.duration * 0.20;
+            VIDEO_PLAYER.currentTime = Math.min(VIDEO_PLAYER.currentTime + skipTime, VIDEO_PLAYER.duration);
+            break;
+    }
+});
+
+document.addEventListener("wheel", (event) => {
+    if (isNavigating) return;
+    
+    isNavigating = true;
+    const newIndex = event.deltaY > 0 
+        ? currentVideoIndex + 1 
+        : currentVideoIndex - 1;
+    
+    if (newIndex >= 0 && newIndex < videos.length) {
+        currentVideoIndex = newIndex;
+        loadVideo(currentVideoIndex);
+    }
+    
+    setTimeout(() => isNavigating = false, NAVIGATION_COOLDOWN);
+    event.preventDefault();
+});
+
+// Modal interactions
+CONFIRM_DELETE_BTN.addEventListener("click", deleteVideo);
+CANCEL_DELETE_BTN.addEventListener("click", () => {
+    hideElement(CONFIRMATION_MODAL);
+    deleteConfirmed = false;
+});
+
+INFO_BTN.addEventListener("click", () => showElement(INFO_MODAL));
+CLOSE_INFO_MODAL_BTN.addEventListener("click", () => hideElement(INFO_MODAL));
+
+// Video deletion
+function deleteVideo() {
+    if (videos.length === 0) return;
+    
+    const videoToDelete = videos[currentVideoIndex];
+    fetch("/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ video: videoToDelete })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            videos.splice(currentVideoIndex, 1);
+            currentVideoIndex = Math.min(currentVideoIndex, videos.length - 1);
+            loadVideo(currentVideoIndex);
+            hideElement(CONFIRMATION_MODAL);
+        } else {
+            alert("Failed to delete the video.");
+        }
+    })
+    .catch(error => {
+        alert("Error deleting video: " + error.message);
+    });
+}
+
+// Initial load
+window.onload = () => {
+    updateVideoList(() => {
+        if (videos.length > 0) {
+            loadVideo(currentVideoIndex);
+        }
+    });
+};
+
+</script>
+</body>
+</html>
