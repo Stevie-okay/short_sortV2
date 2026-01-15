@@ -21,3 +21,8 @@ Put your right hand on the arrow keys, down = next, 0 (num-pad) skip forward in 
 6. [Keyboard ArrowLeft] will cancel the "You sure you want to delete?" window
 
 Info: This version does not include .mkv files. Transcoding/ffmpeg was removed too for simplicity.
+
+
+
+https://github.com/user-attachments/assets/83bf3291-921e-4b58-afcf-9738bcb5560a
+
