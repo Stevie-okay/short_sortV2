@@ -19,10 +19,13 @@ Put your right hand on the arrow keys, down = next, 0 (num-pad) skip forward in 
 5. [Keyboard ArrowRigh]t again and the video will be deleted from your drive
 
 6. [Keyboard ArrowLeft] will cancel the "You sure you want to delete?" window
+7. Simply CTR+C in the CMD to close it, or just 'X'.
 
 Info: This version does not include .mkv files. Transcoding/ffmpeg was removed too for simplicity.
 
 
 
-https://github.com/user-attachments/assets/83bf3291-921e-4b58-afcf-9738bcb5560a
+https://github.com/user-attachments/assets/6598c797-0715-443f-9878-f8ce5d0242dc
+
+
 
