@@ -4,8 +4,7 @@ https://github.com/user-attachments/assets/6598c797-0715-443f-9878-f8ce5d0242dc
 
 # 🎬 Short-Sort
 
-Lets you delete videos from local storage while you scroll through them.
-Depending on how many videos there are, first load might take a few seconds.  
+Lets you delete videos from local storage while you scroll through them.    
 Already watched videos will be skipped, just continue another time.
 
 ##  Required Packages
@@ -23,9 +22,10 @@ pip install waitress
    ```
    *(Videos in subfolders will be included)*
 
-2. **Start the Application**: Run `Short-Sort.py`
+2. **Start the Application**: Run `Short-Sort.py` *
+   Depending on how many videos there are, first load might take a few seconds.
 
-3. **Access Web Interface**: Open your web browser and go to:
+4. **Access Web Interface**: Open your web browser and go to:
    ```
    http://127.0.0.1:5000
    ```
