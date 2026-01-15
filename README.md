@@ -23,5 +23,6 @@ Put your right hand on the arrow keys, down = next, 0 (num-pad) skip forward in 
 
 6. [Keyboard ArrowLeft] will cancel the "You sure you want to delete?" window
 7. Simply CTR+C in the CMD to close it, or just 'X'.
+8. If you want to 'start over' and rewatch already watched ones simply delete the watched_videos.db in the script folder.
 
 Info: This version does not include .mkv files. Transcoding/ffmpeg was removed too for simplicity.
