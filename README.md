@@ -5,7 +5,8 @@ https://github.com/user-attachments/assets/6598c797-0715-443f-9878-f8ce5d0242dc
 # 🎬 Short-Sort
 
 Lets you delete videos from local storage while you scroll through them.
-Depending on how many videos there are, first load might take a few seconds.
+Depending on how many videos there are, first load might take a few seconds.  
+Already watched videos will be skipped, just continue another time.
 
 ##  Required Packages
 
