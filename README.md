@@ -48,10 +48,7 @@ pip install waitress
 ### Delete Functionality
 - **Arrow →** (once): Mark video for deletion
 - **Arrow →** (again): Delete video from your drive **⚠️ WARNING: This action is irreversible**
-
-### Additional Controls
-- **Arrow Left ←**: Cancel deletion confirmation window
-- **Ctrl+C**: Close application via command line or simply **X** close it.
+- - **Arrow Left ←** Cancel deletion confirmation window
 
 ### Reset Watched Videos
 -If you start short-short.py another time again **already watched videos will be skipped.**    
