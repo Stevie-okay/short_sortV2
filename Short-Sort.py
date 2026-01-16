@@ -10,12 +10,20 @@ from waitress import serve
 
 app = Flask(__name__)
 
+############################
+############################
+
 VIDEO_FOLDER = r'J:\channels'      # CHANGE IT TO YOUR DOWNLOAD LOCATION!!!
+
+############################
+############################
+
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "watched_videos.db")
 SKIP_LAST_VIEWED = True
 
 files_to_delete = []
 files_in_use = set()
+deletionsCounter = 0;
 
 def get_connection():
     try:
@@ -129,7 +137,6 @@ def mark_video_as_watched(video_path):
     finally:
         close_connection(conn)
 
-
 @app.route('/video/<path:filename>')
 def stream_video(filename):
     try:
@@ -160,6 +167,7 @@ def stream_video(filename):
             print(f"Failed to remove video from files_in_use: {e}")   
 
 def attempt_deletion():
+    global deletionsCounter
     conn = None
     try:
         conn = get_connection()
@@ -179,6 +187,7 @@ def attempt_deletion():
                         cursor.execute("DELETE FROM watched_videos WHERE video_hash = ?", (video_hash,))
                         conn.commit()
                         print(f"Deleted {video_path}, Removed video hash {video_hash} from database")
+                        deletionsCounter += 1
                     files_to_delete.remove(video_path)
                 except Exception as e:
                     print(f"Error deleting {video_path}: {str(e)}")
@@ -227,7 +236,6 @@ def delete_video():
             print("Attempted to delete file outside of allowed directory.")
             return jsonify({"status": "error", "message": "Invalid file path"})
         files_to_delete.append(full_path)
-        print(f"Video marked for deletion: {full_path}")
         return jsonify({"status": "success", "message": "Video marked for deletion"})
     except Exception as e:
         print(f"Error during video deletion: {e}")
@@ -238,5 +246,6 @@ if __name__ == '__main__':
     def shutdown_cleanup():
         print("App shutting down, attempting to clean up files.")
         attempt_deletion()
+        print(f"Total Deletion in this Session {deletionsCounter}")
     atexit.register(shutdown_cleanup)
     serve(app, host='127.0.0.1', port=5000)
