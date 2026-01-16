@@ -259,21 +259,42 @@ animation: fadeIn .3s ease-in-out
     justify-content: space-between;
     font-weight: bold;
 }
+#filename-box {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    z-index: 1001;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+}
 </style>
 </head>
 <body>
 
-    <div class="video-container">
-        <video id="video-player" controls>
-            <source id="video-source" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <div id="counter-box">
-    <div>Total: <span id="total-videos">0</span></div>
-    <div>Watched: <span id="watched-videos">0</span></div>
-    <div>Left: <span id="left-videos">0</span></div>
-</div>
+<div class="video-container">
+    <div id="filename-box">
+        <span id="video-filename">Loading...</span>
     </div>
+    <video id="video-player" controls>
+        <source id="video-source" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div id="counter-box">
+        <div>Total: <span id="total-videos">0</span></div>
+        <div>Remain: <span id="left-videos">0</span></div>
+        <div>Watched: <span id="watched-videos">0</span></div>
+        <div>Deleted: <span id="deleted-videos">0</span></div>
+    </div>
+</div>
 
 
     <div id="confirmation-modal" class="modal">
@@ -354,6 +375,7 @@ const INFO_BTN = document.getElementById("info-btn");
 const INFO_MODAL = document.getElementById("info-modal");
 const CLOSE_INFO_MODAL_BTN = document.getElementById("close-info-modal");
 let watchedVideos = new Set();
+let deletedVideos = new Set();
 
 // State management
 let currentVideoIndex = 0;
@@ -392,6 +414,12 @@ function loadVideo(index) {
     VIDEO_SOURCE.src = `/video/${encodedPath}`;
     VIDEO_PLAYER.load();
     playVideo();
+}
+
+function updateFilenameBox() {
+    const currentVideo = videos[currentVideoIndex];
+    const filename = currentVideo.split('/').pop(); // Get just the filename
+    document.getElementById("video-filename").textContent = filename;
 }
 
 function updateVideoList(callback) {
@@ -514,9 +542,11 @@ function deleteVideo() {
     .then(data => {
         if (data.status === "success") {
             videos.splice(currentVideoIndex, 1);
+            deletedVideos.add(videoToDelete);
             currentVideoIndex = Math.min(currentVideoIndex, videos.length - 1);
             loadVideo(currentVideoIndex);
             hideElement(CONFIRMATION_MODAL);
+            updateCounters();
         } else {
             alert("Failed to delete the video.");
         }
@@ -531,6 +561,8 @@ window.onload = () => {
     updateVideoList(() => {
         if (videos.length > 0) {
             loadVideo(currentVideoIndex);
+            updateFilenameBox();
+            updateCounters();
         }
     });
 };
@@ -540,10 +572,12 @@ function updateCounters() {
     document.getElementById("total-videos").textContent = videos.length;
     document.getElementById("watched-videos").textContent = watchedVideos.size;
     document.getElementById("left-videos").textContent = videos.length - watchedVideos.size;
+    document.getElementById("deleted-videos").textContent = deletedVideos.size;
 }
 
 // Track when a video is loaded
 VIDEO_PLAYER.addEventListener("loadeddata", () => {
+    updateFilenameBox();
     const currentVideo = videos[currentVideoIndex];
     if (!watchedVideos.has(currentVideo)) {
         watchedVideos.add(currentVideo);
@@ -557,4 +591,3 @@ updateCounters();
 </script>
 </body>
 </html>
-
