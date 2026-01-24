@@ -446,7 +446,7 @@ function updateVideoList(callback) {
 }
 
 function handleNavigation(direction) {
-    if (isNavigating) return;
+    if (isNavigating || deleteConfirmed) return;
     
     isNavigating = true;
     const newIndex = direction === 'up' ? currentVideoIndex - 1 : currentVideoIndex + 1;
@@ -502,7 +502,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener("wheel", (event) => {
-    if (isNavigating) return;
+    if (isNavigating || deleteConfirmed) return;
     
     isNavigating = true;
     const newIndex = event.deltaY > 0 
@@ -591,4 +591,3 @@ updateCounters();
 </script>
 </body>
 </html>
-
