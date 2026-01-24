@@ -1,6 +1,5 @@
 from flask import Flask, render_template, jsonify, request, send_file
 import os
-import urllib.parse
 import mimetypes  
 import threading
 import atexit
@@ -140,9 +139,6 @@ def mark_video_as_watched(video_path):
 @app.route('/video/<path:filename>')
 def stream_video(filename):
     try:
-        filename = urllib.parse.unquote(filename)
-        if '..' in filename or filename.startswith('/'):
-            return jsonify({"error": "Invalid filename"}), 400
         video_path = os.path.join(VIDEO_FOLDER, filename)
         if not os.path.isfile(video_path):
             return jsonify({"error": "Video not found"}), 404
@@ -186,7 +182,7 @@ def attempt_deletion():
                         os.remove(video_path)
                         cursor.execute("DELETE FROM watched_videos WHERE video_hash = ?", (video_hash,))
                         conn.commit()
-                        print(f"Deleted {video_path}, Removed video hash {video_hash} from database")
+                        print(f"Deleted {video_path}")
                         deletionsCounter += 1
                     files_to_delete.remove(video_path)
                 except Exception as e:
@@ -207,7 +203,6 @@ def index():
     except Exception as e:
         print(f"Error retrieving video files: {e}")
         videos = []
-    encoded_videos = [urllib.parse.quote(video) for video in videos]
     video_types = {}
     for video in videos:
         try:
@@ -218,7 +213,7 @@ def index():
         except Exception as e:
             print(f"Error determining MIME type for {video}: {e}")
             video_types[video] = 'application/octet-stream'
-    return render_template('index.html', videos=encoded_videos, video_types=video_types)
+    return render_template('index.html', videos=videos, video_types=video_types)
 
 @app.route('/delete', methods=['POST'])
 def delete_video():
@@ -227,8 +222,7 @@ def delete_video():
         if not video_path:
             print("No video specified in the request.")
             return jsonify({"status": "error", "message": "No video specified"})
-        decoded_path = urllib.parse.unquote(video_path)
-        full_path = os.path.join(decoded_path)
+        full_path = os.path.abspath(video_path)
         if not os.path.exists(full_path):
             print(f"File not found: {full_path}")
             return jsonify({"status": "error", "message": "File not found"})
